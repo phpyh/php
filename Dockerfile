@@ -12,8 +12,8 @@ ARG GID=10001
 
 RUN <<EOF
     set -e
-    groupmod --gid=${GID} www-data
-    usermod --uid=${UID} --gid=${GID} www-data
+    groupadd --gid=${GID} app
+    useradd --uid=${UID} --gid=${GID} --create-home --shell /bin/bash app
     apt-get update
     apt-get install --no-install-recommends --no-install-suggests -q -y unzip tini
 EOF
@@ -28,14 +28,14 @@ RUN <<EOF
     set -e
     ln -s /usr/bin/composer /usr/bin/c
     mkdir /var/.composer
-    chown www-data:www-data /var/.composer
+    chown app:app /var/.composer
 EOF
 
 ENV COMPOSER_HOME=/var/.composer
 ENV COMPOSER_CACHE_DIR=/var/.composer/cache
 ENV PATH="/var/.composer/vendor/bin:${PATH}"
 
-USER www-data
+USER app
 
 RUN <<EOF
     set -e
