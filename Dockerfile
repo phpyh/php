@@ -1,6 +1,8 @@
+ARG PHP_VERSION=8.4
+
 FROM composer:2.9 AS composer
 FROM mlocati/php-extension-installer:2.9 AS php-extension-installer
-FROM php:8.4-cli-bookworm AS php-dev
+FROM php:${PHP_VERSION}-cli-bookworm
 
 COPY --from=composer /usr/bin/composer /usr/bin/
 COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
