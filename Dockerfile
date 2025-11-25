@@ -1,11 +1,6 @@
-ARG PHP_VERSION=8.3
+ARG PHP_VERSION=8.5
 
-FROM composer:2.9 AS composer
-FROM mlocati/php-extension-installer:2.9 AS php-extension-installer
 FROM php:${PHP_VERSION}-cli-bookworm
-
-COPY --from=composer /usr/bin/composer /usr/bin/
-COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 ARG UID=10001
 ARG GID=10001
@@ -18,15 +13,13 @@ RUN <<EOF
     apt-get install --no-install-recommends --no-install-suggests -q -y unzip tini
 EOF
 
-RUN <<EOF
-    set -e
-    install-php-extensions opcache pcntl sockets bcmath intl uv
-    apt-get remove -q -y ${PHPIZE_DEPS} ${BUILD_DEPENDS}
-EOF
+ARG EXTENSIONS=''
 
-RUN <<EOF
+RUN --mount=type=bind,from=mlocati/php-extension-installer:latest,source=/usr/bin/install-php-extensions,target=/usr/bin/install-extensions <<EOF
     set -e
-    ln -s /usr/bin/composer /usr/bin/c
+    install-extensions @composer opcache pcntl sockets bcmath intl uv ${EXTENSIONS}
+    apt-get remove -q -y ${PHPIZE_DEPS} ${BUILD_DEPENDS}
+    ln -s /usr/local/bin/composer /usr/local/bin/c
     mkdir /var/.composer
     chown app:app /var/.composer
 EOF
@@ -39,14 +32,16 @@ USER app
 
 RUN <<EOF
     set -e
-    echo '{"config":{"allow-plugins":{"ergebnis/composer-normalize": true},"sort-packages":true}}' >> /var/.composer/composer.json
+    composer global config allow-plugins.infection/extension-installer true
+    composer global config allow-plugins.ergebnis/composer-normalize true
     composer global require --no-cache \
-        ergebnis/composer-normalize \
         friendsofphp/php-cs-fixer \
-        phpstan/phpstan \
         phpyh/coding-standard \
+        phpstan/phpstan \
         rector/rector \
-        shipmonk/composer-dependency-analyser
+        shipmonk/composer-dependency-analyser \
+        ergebnis/composer-normalize \
+        infection/infection
 EOF
 
 WORKDIR /app
