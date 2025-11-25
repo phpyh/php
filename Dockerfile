@@ -27,6 +27,7 @@ RUN --mount=type=bind,from=mlocati/php-extension-installer:latest,source=/usr/bi
         bcmath \
         intl \
         uv \
+        pcov \
         ${EXTENSIONS}
     apt-get remove -q --yes $(echo "${PHPIZE_DEPS}" | sed 's/\bmake\b//') ${BUILD_DEPENDS}
     ln -s /usr/local/bin/composer /usr/local/bin/c
