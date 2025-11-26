@@ -8,7 +8,7 @@ ARG GID=10001
 RUN <<EOF
     set -e
     groupadd --gid=${GID} app
-    useradd --uid=${UID} --gid=${GID} --create-home --shell /bin/bash app
+    useradd --gid=${GID} --uid=${UID} --shell /bin/bash app
     apt-get update
     apt-get install --no-install-recommends --no-install-suggests -q --yes \
         unzip \
@@ -36,7 +36,7 @@ RUN --mount=type=bind,from=mlocati/php-extension-installer:latest,source=/usr/bi
 EOF
 
 ENV COMPOSER_HOME=/var/.composer
-ENV COMPOSER_CACHE_DIR=/var/.composer/cache
+ENV COMPOSER_CACHE_DIR=/dev/null
 ENV PATH="/var/.composer/vendor/bin:${PATH}"
 
 USER app
