@@ -31,13 +31,13 @@ RUN --mount=type=bind,from=mlocati/php-extension-installer:latest,source=/usr/bi
         ${EXTENSIONS}
     apt-get remove -q --yes $(echo "${PHPIZE_DEPS}" | sed 's/\bmake\b//') ${BUILD_DEPENDS}
     ln -s /usr/local/bin/composer /usr/local/bin/c
-    mkdir /var/.composer
-    chown app:app /var/.composer
+    mkdir /composer
+    chown app:app /composer
 EOF
 
-ENV COMPOSER_HOME=/var/.composer
+ENV COMPOSER_HOME=/composer
 ENV COMPOSER_CACHE_DIR=/dev/null
-ENV PATH="/var/.composer/vendor/bin:${PATH}"
+ENV PATH="/composer/vendor/bin:${PATH}"
 
 USER app
 
