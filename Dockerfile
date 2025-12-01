@@ -49,6 +49,7 @@ RUN <<EOF
         friendsofphp/php-cs-fixer \
         phpyh/coding-standard \
         phpstan/phpstan \
+        phpstan/phpstan-strict-rules \
         rector/rector \
         shipmonk/composer-dependency-analyser \
         ergebnis/composer-normalize \
