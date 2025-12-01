@@ -61,6 +61,4 @@ RUN <<EOF
         infection/infection
 EOF
 
-WORKDIR /app
-
 ENTRYPOINT ["tini", "--"]
