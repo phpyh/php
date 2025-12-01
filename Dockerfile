@@ -33,10 +33,6 @@ RUN <<EOF
     chown dev:dev /composer
 EOF
 
-ENV COMPOSER_HOME=/composer
-ENV COMPOSER_CACHE_DIR=/dev/null
-ENV PATH="/composer/vendor/bin:${PATH}"
-
 USER dev
 
 RUN <<EOF
@@ -46,11 +42,15 @@ RUN <<EOF
     git config --global core.excludesFile '/home/dev/.gitignore'
 EOF
 
-RUN <<EOF
+ENV COMPOSER_HOME=/composer
+ENV COMPOSER_CACHE_DIR=/composer/cache
+ENV PATH="/composer/vendor/bin:${PATH}"
+
+RUN --mount=type=cache,target=/composer/cache,uid=${UID},gid=${GID} <<EOF
     set -eux
     composer global config allow-plugins.infection/extension-installer false
     composer global config allow-plugins.ergebnis/composer-normalize true
-    composer global require --no-cache \
+    composer global require \
         friendsofphp/php-cs-fixer \
         phpyh/coding-standard \
         phpstan/phpstan \
