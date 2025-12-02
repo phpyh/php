@@ -55,6 +55,7 @@ RUN --mount=type=cache,target=/composer/cache,uid=${UID},gid=${GID} <<EOF
         phpyh/coding-standard \
         phpstan/phpstan \
         phpstan/phpstan-strict-rules \
+        phpstan/phpstan-phpunit \
         rector/rector \
         shipmonk/composer-dependency-analyser \
         ergebnis/composer-normalize \
