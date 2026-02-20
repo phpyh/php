@@ -17,6 +17,7 @@ RUN <<EOF
         unzip
     (curl -sSLf https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - || echo 'return 1') | sh -s \
         pdo_pgsql \
+        ext-pgsql \
         @composer \
         opcache \
         pcntl \
