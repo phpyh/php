@@ -12,6 +12,7 @@ RUN <<EOF
     addgroup -g ${GID} dev
     adduser -u ${UID} -G dev -D dev
     apk add --no-cache \
+        make \
         git \
         unzip
     (curl -sSLf https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - || echo 'return 1') | sh -s \
