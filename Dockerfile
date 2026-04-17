@@ -2,10 +2,10 @@ ARG PHP_VERSION=8.5
 
 FROM php:${PHP_VERSION}-cli-alpine
 
+ENV LC_ALL=C.UTF-8
+
 ENV UID=10001
 ENV GID=10001
-
-ENV LC_ALL=C.UTF-8
 
 RUN <<EOF
     set -eux
@@ -15,15 +15,15 @@ RUN <<EOF
         git \
         unzip
     (curl -sSLf https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - || echo 'return 1') | sh -s \
-        pdo_pgsql \
-        pgsql \
         @composer \
         opcache \
+        uv \
         pcntl \
         sockets \
-        bcmath \
         intl \
-        uv \
+        bcmath \
+        pgsql \
+        pdo_pgsql \
         pcov
     ln -s /usr/local/bin/composer /usr/local/bin/c
     mkdir /composer
