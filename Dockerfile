@@ -5,6 +5,7 @@ FROM php:${PHP_VERSION}-cli-alpine
 ARG UID=10001
 ARG GID=10001
 ARG COMPOSER_DIR=/home/dev/.composer
+ARG XDEBUG_LOG=/home/dev/xdebug.log
 
 ENV LC_ALL=C.UTF-8
 
@@ -26,17 +27,23 @@ RUN <<EOF
         pdo_pgsql \
         xdebug
     ln -s /usr/local/bin/composer /usr/local/bin/c
-    echo 'xdebug.client_host=host.docker.internal' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-    echo 'xdebug.log=/home/dev/xdebug.log' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
     addgroup -g ${GID} dev
     adduser -u ${UID} -G dev -D dev
 
     mkdir ${COMPOSER_DIR}
     chown dev:dev ${COMPOSER_DIR}
+
+    echo 'xdebug.client_host=host.docker.internal' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    echo 'xdebug.log=${XDEBUG_LOG}' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    touch ${XDEBUG_LOG}
+    chown dev:dev ${XDEBUG_LOG}
 EOF
 
 USER dev
+
+ENV COMPOSER_HOME="${COMPOSER_DIR}"
+ENV PATH="${COMPOSER_DIR}/vendor/bin:${PATH}"
 
 RUN <<EOF
     set -eux
@@ -60,5 +67,3 @@ RUN --mount=type=cache,target=${COMPOSER_DIR}/cache,uid=${UID},gid=${GID} <<EOF
         ergebnis/composer-normalize \
         infection/infection
 EOF
-
-ENV PATH="${COMPOSER_DIR}/vendor/bin:${PATH}"
