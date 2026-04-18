@@ -4,10 +4,13 @@ FROM php:${PHP_VERSION}-cli-alpine
 
 ARG UID=10001
 ARG GID=10001
-ARG COMPOSER_DIR=/home/dev/.composer
-ARG XDEBUG_LOG=/home/dev/xdebug.log
 
 ENV LC_ALL=C.UTF-8
+
+ENV COMPOSER_HOME=/home/dev/.composer
+ENV PATH="${COMPOSER_HOME}/vendor/bin:${PATH}"
+
+ARG XDEBUG_LOG=/home/dev/xdebug.log
 
 RUN <<EOF
     set -eux
@@ -31,8 +34,7 @@ RUN <<EOF
     addgroup -g ${GID} dev
     adduser -u ${UID} -G dev -D dev
 
-    mkdir ${COMPOSER_DIR}
-    chown dev:dev ${COMPOSER_DIR}
+    chown -R dev:dev ${COMPOSER_HOME}
 
     echo 'xdebug.client_host=host.docker.internal' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     echo 'xdebug.log=${XDEBUG_LOG}' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
@@ -42,9 +44,6 @@ EOF
 
 USER dev
 
-ENV COMPOSER_HOME="${COMPOSER_DIR}"
-ENV PATH="${COMPOSER_DIR}/vendor/bin:${PATH}"
-
 RUN <<EOF
     set -eux
     echo '.idea/' >> '/home/dev/.gitignore'
@@ -52,7 +51,7 @@ RUN <<EOF
     git config --global core.excludesFile '/home/dev/.gitignore'
 EOF
 
-RUN --mount=type=cache,target=${COMPOSER_DIR}/cache,uid=${UID},gid=${GID} <<EOF
+RUN --mount=type=cache,target=${COMPOSER_HOME}/cache,uid=${UID},gid=${GID} <<EOF
     set -eux
     composer global config allow-plugins.infection/extension-installer false
     composer global config allow-plugins.ergebnis/composer-normalize true
