@@ -1,4 +1,4 @@
-# phpyh/php
+# PHPyh development PHP images
 
 PHP Docker images for development and CI, built on top of `php:<version>-cli-alpine`.
 
