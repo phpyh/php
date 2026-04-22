@@ -16,7 +16,10 @@ RUN <<EOF
         make \
         git \
         unzip
+EOF
 
+RUN <<EOF
+    set -eux
     (curl -sSLf https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - || echo 'return 1') | sh -s \
         @composer \
         opcache \
@@ -28,7 +31,10 @@ RUN <<EOF
         pgsql \
         pdo_pgsql \
         xdebug
+EOF
 
+RUN <<EOF
+    set -eux
     addgroup -g ${GID} dev
     adduser -u ${UID} -G dev -D dev
 
@@ -36,8 +42,14 @@ RUN <<EOF
 
     touch /xdebug.log
     chown dev:dev /xdebug.log
+
+    echo 'opcache.enable_cli=1' >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
+    echo 'opcache.jit_buffer_size=128M' >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
+    echo 'opcache.jit=tracing' >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
+
+    echo 'xdebug.mode=off' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     echo 'xdebug.client_host=host.docker.internal' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-    echo "xdebug.log=/xdebug.log" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    echo 'xdebug.log=/xdebug.log' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 EOF
 
 USER dev
