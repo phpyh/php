@@ -29,8 +29,8 @@ to match the host user and avoid file permission issues with mounted volumes.
 
 ### PHP extensions
 
-- [`opcache`](https://www.php.net/manual/en/book.opcache.php), pre-configured with CLI enabled and JIT in tracing mode (`opcache.jit_buffer_size=128M`)
-- [`xdebug`](https://xdebug.org), pre-configured with `mode=off`, `client_host=host.docker.internal`, and log at `/xdebug.log`
+- [`opcache`](https://www.php.net/manual/en/book.opcache.php)
+- [`xdebug`](https://xdebug.org) (pre-configured with `mode=off`, `client_host=host.docker.internal`, and `xdebug.log=/xdebug.log`)
 - [`uv`](https://github.com/amphp/ext-uv) (`libuv` bindings for async I/O)
 - [`pcntl`](https://www.php.net/manual/en/book.pcntl.php) (process control: fork, signals, child processes)
 - [`sockets`](https://www.php.net/manual/en/book.sockets.php) (low-level socket interface)

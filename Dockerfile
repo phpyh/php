@@ -43,10 +43,6 @@ RUN <<EOF
     touch /xdebug.log
     chown dev:dev /xdebug.log
 
-    echo 'opcache.enable_cli=1' >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
-    echo 'opcache.jit_buffer_size=128M' >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
-    echo 'opcache.jit=tracing' >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
-
     echo 'xdebug.mode=off' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     echo 'xdebug.client_host=host.docker.internal' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     echo 'xdebug.log=/xdebug.log' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
