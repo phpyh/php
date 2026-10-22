@@ -22,6 +22,10 @@ Published every Monday to `ghcr.io/phpyh/php` for `linux/amd64` and `linux/arm64
 - `git`
 - `unzip`
 
+### Locale
+
+`LC_ALL` is set to `C.UTF-8`, so CLI tools and PHP handle UTF-8 input and output correctly.
+
 ### User
 
 The default user is `dev` (UID `10001`, GID `10001`).
