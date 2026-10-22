@@ -12,6 +12,7 @@ Published every Monday to `ghcr.io/phpyh/php` for `linux/amd64` and `linux/arm64
 | `ghcr.io/phpyh/php:8.3` | 8.3 |
 | `ghcr.io/phpyh/php:8.4` | 8.4 |
 | `ghcr.io/phpyh/php:8.5` | 8.5 |
+| `ghcr.io/phpyh/php:8.6` | 8.6 (RC until GA release) |
 
 ## What's included
 

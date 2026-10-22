@@ -12,7 +12,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [8.2, 8.3, 8.4, 8.5]
+        php: [8.2, 8.3, 8.4, 8.5, 8.6]
+        include:
+          # TODO: remove once PHP 8.6 is released and php:8.6-cli-alpine is available
+          - php: 8.6
+            base: 8.6-rc
     steps:
       - name: Get current timestamp
         id: timestamp
@@ -38,7 +42,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           platforms: linux/amd64,linux/arm64
-          build-args: PHP_VERSION=${{ matrix.php }}
+          build-args: PHP_VERSION=${{ matrix.base || matrix.php }}
           tags: ghcr.io/phpyh/php:${{ matrix.php }}
           push: ${{ github.ref == 'refs/heads/main' && github.repository_owner == 'phpyh' }}
           labels: |
