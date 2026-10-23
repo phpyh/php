@@ -14,9 +14,10 @@ jobs:
       matrix:
         php: [8.2, 8.3, 8.4, 8.5, 8.6]
         include:
-          # TODO: remove once PHP 8.6 is released and php:8.6-cli-alpine is available
+          # TODO: remove once PHP 8.6 is released and mlocati/docker-php-extension-installer supports it
           - php: 8.6
             base: 8.6-rc
+            dockerfile: 8.6.Dockerfile
     steps:
       - name: Get current timestamp
         id: timestamp
@@ -41,6 +42,7 @@ jobs:
       - name: Build & push image
         uses: docker/build-push-action@v7
         with:
+          file: ${{ matrix.dockerfile || 'Dockerfile' }}
           platforms: linux/amd64,linux/arm64
           build-args: PHP_VERSION=${{ matrix.base || matrix.php }}
           tags: ghcr.io/phpyh/php:${{ matrix.php }}
