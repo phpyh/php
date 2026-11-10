@@ -4,6 +4,7 @@ FROM php:${PHP_VERSION}-cli-alpine
 
 ARG UID=10001
 ARG GID=10001
+ARG XDEBUG=
 
 ENV LC_ALL=C.UTF-8
 
@@ -22,6 +23,7 @@ RUN <<EOF
     set -eux
     (curl -sSLf https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - || echo 'return 1') | sh -s \
         @composer \
+        mbstring \
         opcache \
         uv \
         pcntl \
@@ -30,7 +32,7 @@ RUN <<EOF
         bcmath \
         pgsql \
         pdo_pgsql \
-        xdebug
+        ${XDEBUG:-xdebug}
 EOF
 
 RUN <<EOF
