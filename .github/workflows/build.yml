@@ -6,16 +6,25 @@ on:
   schedule:
     - cron: '0 0 * * 1'
 
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
-        php: [8.2, 8.3, 8.4, 8.5, 8.6]
+        php: ['8.2', '8.3', '8.4', '8.5', '8.6']
         include:
           # TODO: remove once PHP 8.6 is released and Xdebug 3.6 is stable
-          - php: 8.6
+          - php: '8.6'
             base: 8.6-rc
             xdebug: xdebug/xdebug@3.6.0alpha1
     steps:
