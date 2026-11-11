@@ -61,5 +61,7 @@ jobs:
             org.opencontainers.image.source=${{ github.event.repository.html_url }}
             org.opencontainers.image.created=${{ steps.timestamp.outputs.rfc3339 }}
             org.opencontainers.image.revision=${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # Weekly rebuild from scratch picks up new releases of extensions and tools
+          no-cache: ${{ github.event_name == 'schedule' }}
+          cache-from: type=gha,scope=php-${{ matrix.php }}
+          cache-to: type=gha,scope=php-${{ matrix.php }},mode=max
