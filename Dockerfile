@@ -74,7 +74,10 @@ RUN <<EOF
     # PHPStan ships its turbo extension for every OS (~55 MB), keep only this platform's.
     # If this platform's directory is not found (layout changed), keep everything.
     turbo=${COMPOSER_HOME}/vendor/phpstan/phpstan/turbo-ext
-    platform=linux-musl-$(uname -m | sed s/aarch64/arm64/)
+    case $(uname -m) in
+        aarch64) platform=linux-musl-arm64 ;;
+        *) platform=linux-musl-$(uname -m) ;;
+    esac
     if [ -d "${turbo}/${platform}" ]; then
         find "${turbo}" -mindepth 1 -maxdepth 1 -type d ! -name "${platform}" -exec rm -rf {} +
     fi
