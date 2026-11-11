@@ -76,57 +76,29 @@ otherwise Docker creates it owned by `root`, and Composer won't be able to write
 
 ## What's included
 
-### System tools
-
-- `make`
-- `git`
-- `unzip`
-
-### Locale
-
-`LC_ALL` is set to `C.UTF-8`, so CLI tools and PHP handle UTF-8 input and output correctly.
-
-### User
-
-The default user is `dev` (UID `1000`, GID `1000`) — the UID of the first user on most Linux systems,
-so files in mounted volumes have matching ownership out of the box. The image also works with any other UID,
-see [File permissions on Linux](#file-permissions-on-linux).
-
-Git is configured with `safe.directory=*`, so it works in mounted repositories owned by another user.
-
-### PHP extensions
-
-- [`mbstring`](https://www.php.net/manual/en/book.mbstring.php) (multibyte string functions)
-- [`opcache`](https://www.php.net/manual/en/book.opcache.php)
-- [`xdebug`](https://xdebug.org) (pre-configured with `mode=off`, `client_host=host.docker.internal`, and `xdebug.log=/xdebug.log`, see [Xdebug](#xdebug))
-- [`uv`](https://github.com/amphp/ext-uv) (`libuv` bindings for async I/O)
-- [`pcntl`](https://www.php.net/manual/en/book.pcntl.php) (process control: fork, signals, child processes)
-- [`sockets`](https://www.php.net/manual/en/book.sockets.php) (low-level socket interface)
-- [`intl`](https://www.php.net/manual/en/book.intl.php) (internationalization via ICU: locales, formatting, collation)
-- [`bcmath`](https://www.php.net/manual/en/book.bc.php) (arbitrary precision arithmetic)
-- [`pgsql`](https://www.php.net/manual/en/book.pgsql.php) (native PostgreSQL interface)
-- [`pdo_pgsql`](https://www.php.net/manual/en/ref.pdo-pgsql.php) (PDO driver for PostgreSQL)
-
-### Composer
-
-`COMPOSER_HOME` is set to `/composer`, and `/composer/vendor/bin` is appended to `PATH` (so it never shadows system binaries) —
-global tools are available as commands without full path. The directory is writable by any user,
-so `composer global require` works without `sudo`.
-
-`c` is available as a short alias for `composer` (e.g. `c req x/y`).
-
-### Quality tools
-
-Installed as global Composer packages.
-
-- [php-cs-fixer](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer), [phpyh/coding-standard](https://github.com/phpyh/coding-standard)
-- [phpstan](https://phpstan.org), [phpstan-strict-rules](https://github.com/phpstan/phpstan-strict-rules), [phpstan-phpunit](https://github.com/phpstan/phpstan-phpunit)
-- [rector](https://getrector.com)
-- [composer-dependency-analyser](https://github.com/shipmonk-rnd/composer-dependency-analyser)
-- [composer-normalize](https://github.com/ergebnis/composer-normalize)
-
-[Infection](https://infection.github.io) is not included, install it per project: `composer require --dev infection/infection`.
-A global copy doesn't find the project's test framework adapters.
+- `make`, `git` and `unzip`
+- `LC_ALL=C.UTF-8`, so CLI tools and PHP handle UTF-8 correctly
+- User `dev` with UID/GID `1000`, see [File permissions on Linux](#file-permissions-on-linux)
+- Git trusts all directories (`safe.directory=*`), so it works in mounted repositories owned by another user
+- PHP extensions:
+  [`bcmath`](https://www.php.net/manual/en/book.bc.php),
+  [`intl`](https://www.php.net/manual/en/book.intl.php),
+  [`mbstring`](https://www.php.net/manual/en/book.mbstring.php),
+  [`opcache`](https://www.php.net/manual/en/book.opcache.php),
+  [`pcntl`](https://www.php.net/manual/en/book.pcntl.php),
+  [`pdo_pgsql`](https://www.php.net/manual/en/ref.pdo-pgsql.php),
+  [`pgsql`](https://www.php.net/manual/en/book.pgsql.php),
+  [`sockets`](https://www.php.net/manual/en/book.sockets.php),
+  [`uv`](https://github.com/amphp/ext-uv) and
+  [`xdebug`](https://xdebug.org) (off by default, see [Xdebug](#xdebug))
+- [Composer](https://getcomposer.org) with a short alias `c`. `COMPOSER_HOME` is `/composer` and is writable by any user,
+  `/composer/vendor/bin` is appended to `PATH`, so global tools run by name and never shadow system binaries
+- Quality tools as global Composer packages:
+  - [php-cs-fixer](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer), [phpyh/coding-standard](https://github.com/phpyh/coding-standard)
+  - [phpstan](https://phpstan.org), [phpstan-strict-rules](https://github.com/phpstan/phpstan-strict-rules), [phpstan-phpunit](https://github.com/phpstan/phpstan-phpunit)
+  - [rector](https://getrector.com)
+  - [composer-dependency-analyser](https://github.com/shipmonk-rnd/composer-dependency-analyser)
+  - [composer-normalize](https://github.com/ergebnis/composer-normalize)
 
 ## PHP configuration
 
