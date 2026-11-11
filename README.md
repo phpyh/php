@@ -134,7 +134,31 @@ or `-u "$(id -u):$(id -g)"` with `docker run`. The image is prepared for this: C
 Composer cache and the Xdebug log are writable by any user. There is no `/etc/passwd` entry
 for such a user, so `HOME` is `/` and `git config --global` is not available; everything else works the same.
 
-On macOS and Windows, Docker Desktop maps file ownership automatically, so UID doesn't matter.
+On macOS and Windows, files created on the host are owned by whichever user the container runs as, so UID doesn't matter for them.
+Files created inside the container are different: Docker Desktop remembers their owner (in the `user.containers.override_stat`
+extended attribute on the host), and a container running with another UID sees them as foreign and read-only.
+To avoid this, always run the container with the same UID.
+
+### Upgrading from UID `10001`
+
+Images built before November 2026 ran as UID `10001`. Files they created in your projects (typically `vendor/`, `var/`
+and even `composer.json`) are still owned by `10001`, so the current image can't modify them. For example,
+`composer require` fails with `./composer.json is not writable`. Running the container as your host user
+does not help either. Fix the ownership once per project.
+
+On Linux:
+
+```shell
+sudo chown -R "$(id -u):$(id -g)" .
+```
+
+On macOS, remove the remembered owner, so the files are owned by whichever user the container runs as:
+
+```shell
+xattr -rd user.containers.override_stat .
+```
+
+Alternatively, delete the affected generated directories (`rm -rf vendor var`) and reinstall dependencies.
 
 ### Composer cache
 
