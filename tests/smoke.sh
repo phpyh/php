@@ -17,6 +17,8 @@ docker run --rm -i "$image" sh -eux <<'SH'
     git --version
     unzip -v | head -n1
     composer --version
+    # Global tools share dependencies: none of them is held back below its latest version
+    composer global outdated --direct --strict
     c --version
     php-cs-fixer --version
     phpstan --version
