@@ -57,7 +57,7 @@ RUN <<EOF
     chmod 666 /xdebug.log
 EOF
 
-USER dev
+USER 1000:1000
 
 RUN <<EOF
     set -eux
