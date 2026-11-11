@@ -29,6 +29,51 @@ Get the current digest with `docker buildx imagetools inspect ghcr.io/phpyh/php:
 
 Notable changes, including breaking ones, are listed in [CHANGELOG.md](CHANGELOG.md).
 
+## Usage
+
+```yaml
+# compose.yaml
+services:
+  app:
+    image: ghcr.io/phpyh/php:8.5
+    volumes:
+      - .:/app
+      - composer-cache:/composer/cache
+    working_dir: /app
+
+volumes:
+  composer-cache:
+```
+
+Or as a one-off command:
+
+```shell
+docker run --rm -it -v "$PWD:/app" -w /app ghcr.io/phpyh/php:8.5 composer install
+```
+
+### File permissions on Linux
+
+With bind mounts on Linux, files inside the container have the same numeric owner as on the host.
+The container runs as `dev` with UID `1000`, which matches the host user on most systems.
+If your UID is different (check with `id -u`), the container can't write to your project,
+and files it does create are owned by UID `1000` on the host.
+
+In that case, run the container as your host user: `user: <uid>:<gid>` in Compose
+or `-u "$(id -u):$(id -g)"` with `docker run`. The image is prepared for this: Composer home,
+Composer cache and the Xdebug log are writable by any user. There is no `/etc/passwd` entry
+for such a user, so `HOME` is `/` and `git config --global` is not available; everything else works the same.
+
+On macOS and Windows, files created on the host are owned by whichever user the container runs as, so UID doesn't matter for them.
+Files created inside the container are different: Docker Desktop remembers their owner (in the `user.containers.override_stat`
+extended attribute on the host), and a container running with another UID sees them as foreign and read-only.
+To avoid this, always run the container with the same UID.
+
+### Composer cache
+
+Mount a named volume to `/composer/cache` to keep the cache between container runs, as in the example above.
+A bind mount of a host directory works too, but make sure the directory exists before the container starts:
+otherwise Docker creates it owned by `root`, and Composer won't be able to write to it.
+
 ## What's included
 
 ### System tools
@@ -103,51 +148,6 @@ Or by extending the image:
 FROM ghcr.io/phpyh/php:8.5
 COPY php.ini /usr/local/etc/php/conf.d/99-local.ini
 ```
-
-## Usage
-
-```yaml
-# compose.yaml
-services:
-  app:
-    image: ghcr.io/phpyh/php:8.5
-    volumes:
-      - .:/app
-      - composer-cache:/composer/cache
-    working_dir: /app
-
-volumes:
-  composer-cache:
-```
-
-Or as a one-off command:
-
-```shell
-docker run --rm -it -v "$PWD:/app" -w /app ghcr.io/phpyh/php:8.5 composer install
-```
-
-### File permissions on Linux
-
-With bind mounts on Linux, files inside the container have the same numeric owner as on the host.
-The container runs as `dev` with UID `1000`, which matches the host user on most systems.
-If your UID is different (check with `id -u`), the container can't write to your project,
-and files it does create are owned by UID `1000` on the host.
-
-In that case, run the container as your host user: `user: <uid>:<gid>` in Compose
-or `-u "$(id -u):$(id -g)"` with `docker run`. The image is prepared for this: Composer home,
-Composer cache and the Xdebug log are writable by any user. There is no `/etc/passwd` entry
-for such a user, so `HOME` is `/` and `git config --global` is not available; everything else works the same.
-
-On macOS and Windows, files created on the host are owned by whichever user the container runs as, so UID doesn't matter for them.
-Files created inside the container are different: Docker Desktop remembers their owner (in the `user.containers.override_stat`
-extended attribute on the host), and a container running with another UID sees them as foreign and read-only.
-To avoid this, always run the container with the same UID.
-
-### Composer cache
-
-Mount a named volume to `/composer/cache` to keep the cache between container runs, as in the example above.
-A bind mount of a host directory works too, but make sure the directory exists before the container starts:
-otherwise Docker creates it owned by `root`, and Composer won't be able to write to it.
 
 ## Xdebug
 
