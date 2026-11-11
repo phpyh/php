@@ -73,6 +73,13 @@ RUN <<EOF
         shipmonk/composer-dependency-analyser \
         ergebnis/composer-normalize \
         infection/infection
+    # PHPStan ships its turbo extension for every OS (~55 MB), keep only this platform's.
+    # If this platform's directory is not found (layout changed), keep everything.
+    turbo=${COMPOSER_HOME}/vendor/phpstan/phpstan/turbo-ext
+    platform=linux-musl-$(uname -m | sed s/aarch64/arm64/)
+    if [ -d "${turbo}/${platform}" ]; then
+        find "${turbo}" -mindepth 1 -maxdepth 1 -type d ! -name "${platform}" -exec rm -rf {} +
+    fi
     # Writable for any user, so the image can run with --user matching the host UID
     mkdir -p ${COMPOSER_HOME}/cache
     chmod -R a+rwX ${COMPOSER_HOME}

@@ -22,6 +22,9 @@ docker run --rm -i "$image" sh -eux <<'SH'
     c --version
     php-cs-fixer --version
     phpstan --version
+    # Turbo extension for this platform survived the pruning in the Dockerfile
+    echo '<?php' > /tmp/turbo.php
+    phpstan analyse -l 0 -vvv --no-progress /tmp/turbo.php 2>&1 | grep '^Turbo extension: enabled'
     rector --version
     composer-dependency-analyser --version
     composer normalize --help >/dev/null
