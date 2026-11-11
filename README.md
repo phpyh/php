@@ -38,7 +38,6 @@ Git is configured with `safe.directory=*`, so it works in mounted repositories o
 
 - [`opcache`](https://www.php.net/manual/en/book.opcache.php)
 - [`xdebug`](https://xdebug.org) (pre-configured with `mode=off`, `client_host=host.docker.internal`, and `xdebug.log=/xdebug.log`)
-- [`pcov`](https://github.com/krakjoe/pcov) (fast code coverage driver, disabled by default, see [Code coverage](#code-coverage))
 - [`uv`](https://github.com/amphp/ext-uv) (`libuv` bindings for async I/O)
 - [`pcntl`](https://www.php.net/manual/en/book.pcntl.php) (process control: fork, signals, child processes)
 - [`sockets`](https://www.php.net/manual/en/book.sockets.php) (low-level socket interface)
@@ -85,22 +84,6 @@ Or by extending the image:
 ```dockerfile
 FROM ghcr.io/phpyh/php:8.5
 COPY php.ini /usr/local/etc/php/conf.d/99-local.ini
-```
-
-## Code coverage
-
-PCOV is the fastest coverage driver, but it is disabled by default: when enabled, it slows down
-all PHP code, not only tests, and is not compatible with Xdebug. Enable it per command:
-
-```shell
-php -d pcov.enabled=1 vendor/bin/phpunit --coverage-text
-infection --initial-tests-php-options='-d pcov.enabled=1'
-```
-
-Alternatively, collect coverage with Xdebug (slower):
-
-```shell
-XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text
 ```
 
 ## Usage
