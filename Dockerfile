@@ -25,10 +25,10 @@ ARG XDEBUG
 
 RUN <<EOF
     set -eux
+    # opcache is enabled in all base images, mbstring is missing from 8.6
     install-php-extensions \
         @composer \
         mbstring \
-        opcache \
         uv \
         pcntl \
         sockets \
