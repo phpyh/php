@@ -38,6 +38,13 @@ RUN <<EOF
     ln -s /usr/local/bin/composer /usr/local/bin/c
 EOF
 
+# Loaded first, so any user .ini in conf.d/ can override these defaults
+COPY <<EOF /usr/local/etc/php/conf.d/00-xdebug.ini
+xdebug.mode=off
+xdebug.client_host=host.docker.internal
+xdebug.log=/xdebug.log
+EOF
+
 ARG UID=10001
 ARG GID=10001
 
@@ -50,10 +57,6 @@ RUN <<EOF
 
     touch /xdebug.log
     chown dev:dev /xdebug.log
-
-    echo 'xdebug.mode=off' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-    echo 'xdebug.client_host=host.docker.internal' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-    echo 'xdebug.log=/xdebug.log' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 EOF
 
 USER dev
