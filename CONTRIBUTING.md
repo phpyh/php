@@ -13,6 +13,15 @@ The PHP version is set with the `PHP_VERSION` build argument (the tag of the `ph
 the Xdebug version — with `XDEBUG` (an `install-php-extensions` spec, `xdebug` by default).
 See the matrix in [build.yaml](.github/workflows/build.yaml) for the values used for each PHP version.
 
+Run the same linters as CI:
+
+```shell
+docker run --rm -v "$PWD:/repo" -w /repo hadolint/hadolint hadolint Dockerfile
+docker buildx build --check .
+docker run --rm -v "$PWD:/repo" -w /repo koalaman/shellcheck:stable tests/*.sh
+docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:1.7.12 -color
+```
+
 ## Scheduled workflows
 
 Two workflows run weekly on a schedule: [build.yaml](.github/workflows/build.yaml) rebuilds and republishes the images,
