@@ -27,6 +27,8 @@ image: ghcr.io/phpyh/php:8.5@sha256:<digest>
 
 Get the current digest with `docker buildx imagetools inspect ghcr.io/phpyh/php:8.5`.
 
+Notable changes, including breaking ones, are listed in [CHANGELOG.md](CHANGELOG.md).
+
 ## What's included
 
 ### System tools
@@ -79,9 +81,7 @@ Installed as global Composer packages.
 - [composer-normalize](https://github.com/ergebnis/composer-normalize)
 
 [Infection](https://infection.github.io) is not included, install it per project: `composer require --dev infection/infection`.
-Don't install it with `composer global require` either. A global copy sees only global test framework adapters,
-and its `infection/extension-installer` registers the project's adapters (e.g. `testo/bridge-infection`)
-in the global copy instead of the project, so the project's Infection doesn't find them.
+A global copy doesn't find the project's test framework adapters.
 
 ## PHP configuration
 
@@ -142,27 +142,6 @@ On macOS and Windows, files created on the host are owned by whichever user the 
 Files created inside the container are different: Docker Desktop remembers their owner (in the `user.containers.override_stat`
 extended attribute on the host), and a container running with another UID sees them as foreign and read-only.
 To avoid this, always run the container with the same UID.
-
-### Upgrading from UID `10001`
-
-Images built before November 2026 ran as UID `10001`. Files they created in your projects (typically `vendor/`, `var/`
-and even `composer.json`) are still owned by `10001`, so the current image can't modify them. For example,
-`composer require` fails with `./composer.json is not writable`. Running the container as your host user
-does not help either. Fix the ownership once per project.
-
-On Linux:
-
-```shell
-sudo chown -R "$(id -u):$(id -g)" .
-```
-
-On macOS, remove the remembered owner, so the files are owned by whichever user the container runs as:
-
-```shell
-xattr -rd user.containers.override_stat .
-```
-
-Alternatively, delete the affected generated directories (`rm -rf vendor var`) and reinstall dependencies.
 
 ### Composer cache
 
