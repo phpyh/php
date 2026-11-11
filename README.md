@@ -9,13 +9,13 @@ PHP Docker images for development and CI, built on top of `php:<version>-cli-alp
 Published to `ghcr.io/phpyh/php` for `linux/amd64` and `linux/arm64` on every push to `main` and every Monday,
 so PHP patch releases, extensions and tools stay up to date.
 
-| Tag                     | PHP |
-|-------------------------|-----|
-| `ghcr.io/phpyh/php:8.2` | 8.2 |
-| `ghcr.io/phpyh/php:8.3` | 8.3 |
-| `ghcr.io/phpyh/php:8.4` | 8.4 |
-| `ghcr.io/phpyh/php:8.5` | 8.5 |
-| `ghcr.io/phpyh/php:8.6` | 8.6 (RC until GA release) |
+| Tag                     | PHP                                                |
+|-------------------------|----------------------------------------------------|
+| `ghcr.io/phpyh/php:8.2` | 8.2 (no updates after security EOL on 31 Dec 2026) |
+| `ghcr.io/phpyh/php:8.3` | 8.3                                                |
+| `ghcr.io/phpyh/php:8.4` | 8.4                                                |
+| `ghcr.io/phpyh/php:8.5` | 8.5                                                |
+| `ghcr.io/phpyh/php:8.6` | 8.6 (RC until GA release)                          |
 
 Each image is also tagged with the full PHP version, e.g. `ghcr.io/phpyh/php:8.5.12`.
 Both tags are moving: they are rebuilt weekly with the latest extensions and tools.

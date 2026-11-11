@@ -48,6 +48,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # TODO: remove 8.2 here and in the publish job after its security support ends on 2026-12-31,
+        #  the last published image stays available
         php: ['8.2', '8.3', '8.4', '8.5', '8.6']
         arch: [amd64, arm64]
         include:
