@@ -61,7 +61,6 @@ USER 1000:1000
 
 RUN <<EOF
     set -eux
-    composer global config allow-plugins.infection/extension-installer false
     composer global config allow-plugins.ergebnis/composer-normalize true
     composer global require --no-cache \
         friendsofphp/php-cs-fixer \
@@ -71,8 +70,7 @@ RUN <<EOF
         phpstan/phpstan-phpunit \
         rector/rector \
         shipmonk/composer-dependency-analyser \
-        ergebnis/composer-normalize \
-        infection/infection
+        ergebnis/composer-normalize
     # PHPStan ships its turbo extension for every OS (~55 MB), keep only this platform's.
     # If this platform's directory is not found (layout changed), keep everything.
     turbo=${COMPOSER_HOME}/vendor/phpstan/phpstan/turbo-ext

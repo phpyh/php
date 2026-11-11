@@ -77,7 +77,11 @@ Installed as global Composer packages.
 - [rector](https://getrector.com)
 - [composer-dependency-analyser](https://github.com/shipmonk-rnd/composer-dependency-analyser)
 - [composer-normalize](https://github.com/ergebnis/composer-normalize)
-- [infection](https://infection.github.io)
+
+[Infection](https://infection.github.io) is not included, install it per project: `composer require --dev infection/infection`.
+Don't install it with `composer global require` either. A global copy sees only global test framework adapters,
+and its `infection/extension-installer` registers the project's adapters (e.g. `testo/bridge-infection`)
+in the global copy instead of the project, so the project's Infection doesn't find them.
 
 ## PHP configuration
 

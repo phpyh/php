@@ -28,7 +28,6 @@ docker run --rm -i "$image" sh -eux <<'SH'
     rector --version
     composer-dependency-analyser --version
     composer normalize --help >/dev/null
-    infection --version
 SH
 
 # Any user can use Composer, Xdebug log and Git in a repository owned by someone else
