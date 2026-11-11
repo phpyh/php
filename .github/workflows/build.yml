@@ -31,10 +31,6 @@ jobs:
             base: 8.6-rc
             xdebug: xdebug/xdebug@3.6.0alpha1
     steps:
-      - name: Get current timestamp
-        id: timestamp
-        run: echo "rfc3339=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
-
       - name: Setup Docker QEMU
         uses: docker/setup-qemu-action@v4
 
@@ -92,6 +88,27 @@ jobs:
             git -C /composer status >/dev/null
           SH
 
+      - name: Get full PHP version
+        id: php
+        run: echo "version=$(docker run --rm phpyh-php:test php -r 'echo PHP_VERSION;')" >> "$GITHUB_OUTPUT"
+
+      - name: Extract image metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        env:
+          # The image index is what GHCR shows on the package page
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
+        with:
+          images: ghcr.io/phpyh/php
+          tags: |
+            type=raw,value=${{ matrix.php }}
+            type=raw,value=${{ steps.php.outputs.version }}
+          labels: &meta |
+            org.opencontainers.image.title=PHPyh PHP ${{ matrix.php }}
+            org.opencontainers.image.description=PHP ${{ matrix.php }} image for development and CI with Composer, Xdebug and code quality tools
+            org.opencontainers.image.version=${{ steps.php.outputs.version }}
+          annotations: *meta
+
       - name: Login to GitHub container registry
         if: env.PUSH == 'true'
         uses: docker/login-action@v4
@@ -105,11 +122,9 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           build-args: *build-args
-          tags: ghcr.io/phpyh/php:${{ matrix.php }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
           push: ${{ env.PUSH == 'true' }}
-          labels: |
-            org.opencontainers.image.source=${{ github.event.repository.html_url }}
-            org.opencontainers.image.created=${{ steps.timestamp.outputs.rfc3339 }}
-            org.opencontainers.image.revision=${{ github.sha }}
           cache-from: ${{ github.event_name != 'schedule' && format('type=gha,scope=php-{0}', matrix.php) || '' }}
           cache-to: type=gha,scope=php-${{ matrix.php }},mode=max
