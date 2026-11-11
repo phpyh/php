@@ -17,11 +17,13 @@ RUN <<EOF
         unzip
 EOF
 
+COPY --from=mlocati/php-extension-installer:2 /usr/bin/install-php-extensions /usr/local/bin/
+
 ARG XDEBUG
 
 RUN <<EOF
     set -eux
-    (curl -sSLf https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - || echo 'return 1') | sh -s \
+    install-php-extensions \
         @composer \
         mbstring \
         opcache \
