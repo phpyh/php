@@ -42,3 +42,8 @@ jobs:
             echo "$errors"
             exit 1
           fi
+
+      - name: Fail intentionally to test notifications
+        run: |
+          echo "::error::Intentional failure to test failure notifications, revert this commit"
+          exit 1
