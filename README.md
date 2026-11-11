@@ -1,10 +1,13 @@
 # PHPyh development PHP images
 
+[![Build](https://github.com/phpyh/php/actions/workflows/build.yml/badge.svg)](https://github.com/phpyh/php/actions/workflows/build.yml)
+
 PHP Docker images for development and CI, built on top of `php:<version>-cli-alpine`.
 
 ## Images
 
-Published every Monday to `ghcr.io/phpyh/php` for `linux/amd64` and `linux/arm64`.
+Published to `ghcr.io/phpyh/php` for `linux/amd64` and `linux/arm64` on every push to `main` and every Monday,
+so PHP patch releases, extensions and tools stay up to date.
 
 | Tag                     | PHP |
 |-------------------------|-----|
@@ -13,6 +16,16 @@ Published every Monday to `ghcr.io/phpyh/php` for `linux/amd64` and `linux/arm64
 | `ghcr.io/phpyh/php:8.4` | 8.4 |
 | `ghcr.io/phpyh/php:8.5` | 8.5 |
 | `ghcr.io/phpyh/php:8.6` | 8.6 (RC until GA release) |
+
+Each image is also tagged with the full PHP version, e.g. `ghcr.io/phpyh/php:8.5.12`.
+Both tags are moving: they are rebuilt weekly with the latest extensions and tools.
+For a reproducible environment, pin the image by digest:
+
+```yaml
+image: ghcr.io/phpyh/php:8.5@sha256:<digest>
+```
+
+Get the current digest with `docker buildx imagetools inspect ghcr.io/phpyh/php:8.5`.
 
 ## What's included
 
