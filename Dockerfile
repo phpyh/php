@@ -7,7 +7,7 @@ FROM php:${PHP_VERSION}-cli-alpine
 ENV LC_ALL=C.UTF-8
 
 ENV COMPOSER_HOME=/composer
-ENV PATH="${COMPOSER_HOME}/vendor/bin:${PATH}"
+ENV PATH="${PATH}:${COMPOSER_HOME}/vendor/bin"
 
 RUN <<EOF
     set -eux

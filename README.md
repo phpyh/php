@@ -62,7 +62,7 @@ Git is configured with `safe.directory=*`, so it works in mounted repositories o
 
 ### Composer
 
-`COMPOSER_HOME` is set to `/composer`, and `/composer/vendor/bin` is added to `PATH` —
+`COMPOSER_HOME` is set to `/composer`, and `/composer/vendor/bin` is appended to `PATH` (so it never shadows system binaries) —
 global tools are available as commands without full path. The directory is writable by any user,
 so `composer global require` works without `sudo`.
 
