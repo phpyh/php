@@ -51,34 +51,27 @@ Or as a one-off command:
 docker run --rm -it -v "$PWD:/app" -w /app ghcr.io/phpyh/php:8.5 composer install
 ```
 
-### File permissions on Linux
+### File permissions
 
-With bind mounts on Linux, files inside the container have the same numeric owner as on the host.
-The container runs as `dev` with UID `1000`, which matches the host user on most systems.
-If your UID is different (check with `id -u`), the container can't write to your project,
-and files it does create are owned by UID `1000` on the host.
+The container runs as `dev` with UID `1000`, the UID of the first user on most Linux systems.
+On Linux, bind-mounted files keep their numeric owner, so if your UID is different (`id -u`),
+the container can't write to your project. Run it as your host user then: `user: <uid>:<gid>` in Compose
+or `-u "$(id -u):$(id -g)"` with `docker run`. Composer home, Composer cache and the Xdebug log are writable by any user.
+Such a user has no `/etc/passwd` entry, so `HOME` is `/` and `git config --global` is not available.
 
-In that case, run the container as your host user: `user: <uid>:<gid>` in Compose
-or `-u "$(id -u):$(id -g)"` with `docker run`. The image is prepared for this: Composer home,
-Composer cache and the Xdebug log are writable by any user. There is no `/etc/passwd` entry
-for such a user, so `HOME` is `/` and `git config --global` is not available; everything else works the same.
-
-On macOS and Windows, files created on the host are owned by whichever user the container runs as, so UID doesn't matter for them.
-Files created inside the container are different: Docker Desktop remembers their owner (in the `user.containers.override_stat`
-extended attribute on the host), and a container running with another UID sees them as foreign and read-only.
-To avoid this, always run the container with the same UID.
+On macOS and Windows, Docker Desktop remembers the owner of files created in the container,
+and a container running with another UID can't modify them. Always run the container with the same UID.
 
 ### Composer cache
 
-Mount a named volume to `/composer/cache` to keep the cache between container runs, as in the example above.
-A bind mount of a host directory works too, but make sure the directory exists before the container starts:
-otherwise Docker creates it owned by `root`, and Composer won't be able to write to it.
+Mount a named volume to `/composer/cache` to keep the cache between runs, as in the example above.
+To bind-mount a host directory instead, create it first, otherwise Docker creates it owned by `root`.
 
 ## What's included
 
 - `make`, `git` and `unzip`
 - `LC_ALL=C.UTF-8`, so CLI tools and PHP handle UTF-8 correctly
-- User `dev` with UID/GID `1000`, see [File permissions on Linux](#file-permissions-on-linux)
+- User `dev` with UID/GID `1000`, see [File permissions](#file-permissions)
 - Git trusts all directories (`safe.directory=*`), so it works in mounted repositories owned by another user
 - PHP extensions:
   [`bcmath`](https://www.php.net/manual/en/book.bc.php),
