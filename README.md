@@ -68,7 +68,7 @@ so `composer global require` works without `sudo`.
 
 `c` is available as a short alias for `composer` (e.g. `c req x/y`).
 
-### Quality Tools
+### Quality tools
 
 Installed as global Composer packages.
 
