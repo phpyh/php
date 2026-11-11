@@ -15,6 +15,8 @@ RUN <<EOF
         make \
         git \
         unzip
+    # Mounted projects are often owned by a host user with a different UID
+    git config --system --add safe.directory '*'
 EOF
 
 COPY --from=mlocati/php-extension-installer:2 /usr/bin/install-php-extensions /usr/local/bin/
