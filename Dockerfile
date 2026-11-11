@@ -47,18 +47,14 @@ xdebug.client_host=host.docker.internal
 xdebug.log=/xdebug.log
 EOF
 
-ARG UID=10001
-ARG GID=10001
-
 RUN <<EOF
     set -eux
-    addgroup -g ${GID} dev
-    adduser -u ${UID} -G dev -D dev
-
+    addgroup -g 1000 dev
+    adduser -u 1000 -G dev -D dev
     chown -R dev:dev ${COMPOSER_HOME}
-
+    # Writable for any user, so the image can run with --user matching the host UID
     touch /xdebug.log
-    chown dev:dev /xdebug.log
+    chmod 666 /xdebug.log
 EOF
 
 USER dev
@@ -77,4 +73,7 @@ RUN <<EOF
         shipmonk/composer-dependency-analyser \
         ergebnis/composer-normalize \
         infection/infection
+    # Writable for any user, so the image can run with --user matching the host UID
+    mkdir -p ${COMPOSER_HOME}/cache
+    chmod -R a+rwX ${COMPOSER_HOME}
 EOF
