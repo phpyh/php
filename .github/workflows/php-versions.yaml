@@ -1,0 +1,44 @@
+# Reminds to update the build matrix when a PHP version is released, reaches end of life or leaves RC
+name: PHP versions
+
+on:
+  workflow_dispatch: ~
+  push:
+    branches: [main]
+    paths: &paths
+      - .github/workflows/build.yaml
+      - .github/workflows/php-versions.yaml
+  pull_request:
+    paths: *paths
+  schedule:
+    - cron: '0 0 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Check build matrix
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Compare build matrix with endoflife.date
+        run: |
+          matrix=$(yq -o=json '.jobs.build.strategy.matrix' .github/workflows/build.yaml)
+          php=$(curl -fsS https://endoflife.date/api/v1/products/php)
+          errors=$(jq -r --argjson matrix "$matrix" '
+            (.result.releases | map(select(.isMaintained) | .name)) as $maintained
+            | (.result.releases | map(select(.isEol) | .name)) as $eol
+            | (($maintained - $matrix.php)[] | "PHP \(.) is released, add it to the build matrix"),
+              ($matrix.php[] | select(IN($eol[])) | "PHP \(.) has reached end of life, remove it from the build matrix"),
+              ($matrix.include[] | select(.base // "" | endswith("-rc")) | .php | select(IN($maintained[]))
+                | "PHP \(.) is released, build it from the GA base image instead of RC")
+            | "::error::\(.)"
+          ' <<< "$php")
+          if [ -n "$errors" ]; then
+            echo "$errors"
+            exit 1
+          fi
