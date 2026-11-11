@@ -1,6 +1,6 @@
 # PHPyh development PHP images
 
-[![Build](https://github.com/phpyh/php/actions/workflows/build.yml/badge.svg)](https://github.com/phpyh/php/actions/workflows/build.yml)
+[![Build](https://github.com/phpyh/php/actions/workflows/build.yaml/badge.svg)](https://github.com/phpyh/php/actions/workflows/build.yaml)
 
 PHP Docker images for development and CI, built on top of `php:<version>-cli-alpine`.
 
