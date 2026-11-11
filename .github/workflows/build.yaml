@@ -10,7 +10,6 @@ on:
 
 permissions:
   contents: read
-  packages: write
 
 env:
   IMAGE: ghcr.io/phpyh/php
@@ -48,6 +47,9 @@ jobs:
     name: Build ${{ matrix.php }} ${{ matrix.arch }}
     needs: lint
     runs-on: ${{ matrix.runner }}
+    permissions: &push-permissions
+      contents: read
+      packages: write
     timeout-minutes: 30
     strategy:
       fail-fast: false
@@ -149,6 +151,7 @@ jobs:
     # Same as env.PUSH (env is not available here); runs even if another PHP version failed to build
     if: ${{ !cancelled() && needs.lint.result == 'success' && github.ref == 'refs/heads/main' && github.repository_owner == 'phpyh' }}
     runs-on: ubuntu-24.04
+    permissions: *push-permissions
     timeout-minutes: 10
     strategy:
       fail-fast: false
