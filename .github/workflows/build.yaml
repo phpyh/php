@@ -60,7 +60,8 @@ jobs:
             runner: ubuntu-24.04
           - arch: arm64
             runner: ubuntu-24.04-arm
-          # TODO: remove once PHP 8.6 is released and Xdebug 3.6 is stable
+          # TODO: remove once PHP 8.6 is released and Xdebug 3.6 is stable.
+          # Then check that the 8.6 base image is NTS like 8.2–8.5 (8.6-rc is built as ZTS).
           - php: '8.6'
             base: 8.6-rc
             xdebug: xdebug/xdebug@3.6.0alpha1

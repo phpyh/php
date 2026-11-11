@@ -173,6 +173,19 @@ services:
 
 Xdebug connects to `host.docker.internal:9003`. If the IDE doesn't receive a connection, check `/xdebug.log` in the container.
 
+## Development
+
+Build an image locally and run the smoke test against it:
+
+```shell
+docker build -t phpyh-php:test .
+tests/smoke.sh phpyh-php:test
+```
+
+The PHP version is set with the `PHP_VERSION` build argument (the tag of the `php:<version>-cli-alpine` base image, `8.5` by default),
+the Xdebug version — with `XDEBUG` (an `install-php-extensions` spec, `xdebug` by default).
+See the matrix in [build.yaml](.github/workflows/build.yaml) for the values used for each PHP version.
+
 ## License
 
 MIT License — see [LICENSE](LICENSE) for details.
