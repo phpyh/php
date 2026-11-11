@@ -36,6 +36,7 @@ RUN <<EOF
         bcmath \
         pgsql \
         pdo_pgsql \
+        pcov \
         ${XDEBUG:-xdebug}
     ln -s /usr/local/bin/composer /usr/local/bin/c
 EOF
@@ -45,6 +46,10 @@ COPY <<EOF /usr/local/etc/php/conf.d/00-xdebug.ini
 xdebug.mode=off
 xdebug.client_host=host.docker.internal
 xdebug.log=/xdebug.log
+EOF
+
+COPY <<EOF /usr/local/etc/php/conf.d/00-pcov.ini
+pcov.enabled=0
 EOF
 
 RUN <<EOF
