@@ -49,6 +49,7 @@ Git is configured with `safe.directory=*`, so it works in mounted repositories o
 
 ### PHP extensions
 
+- [`mbstring`](https://www.php.net/manual/en/book.mbstring.php) (multibyte string functions)
 - [`opcache`](https://www.php.net/manual/en/book.opcache.php)
 - [`xdebug`](https://xdebug.org) (pre-configured with `mode=off`, `client_host=host.docker.internal`, and `xdebug.log=/xdebug.log`, see [Xdebug](#xdebug))
 - [`uv`](https://github.com/amphp/ext-uv) (`libuv` bindings for async I/O)
