@@ -50,6 +50,8 @@ to match the host user and avoid file permission issues with mounted volumes.
 global tools are available as commands without full path. The directory is owned by `dev`,
 so `composer global require` works without `sudo`.
 
+`c` is available as a short alias for `composer` (e.g. `c req x/y`).
+
 ### Quality Tools
 
 Installed as global Composer packages.

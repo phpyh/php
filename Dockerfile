@@ -33,6 +33,7 @@ RUN <<EOF
         pgsql \
         pdo_pgsql \
         ${XDEBUG:-xdebug}
+    ln -s /usr/local/bin/composer /usr/local/bin/c
 EOF
 
 RUN <<EOF
