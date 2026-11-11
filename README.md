@@ -37,7 +37,7 @@ Git is configured with `safe.directory=*`, so it works in mounted repositories o
 ### PHP extensions
 
 - [`opcache`](https://www.php.net/manual/en/book.opcache.php)
-- [`xdebug`](https://xdebug.org) (pre-configured with `mode=off`, `client_host=host.docker.internal`, and `xdebug.log=/xdebug.log`)
+- [`xdebug`](https://xdebug.org) (pre-configured with `mode=off`, `client_host=host.docker.internal`, and `xdebug.log=/xdebug.log`, see [Xdebug](#xdebug))
 - [`uv`](https://github.com/amphp/ext-uv) (`libuv` bindings for async I/O)
 - [`pcntl`](https://www.php.net/manual/en/book.pcntl.php) (process control: fork, signals, child processes)
 - [`sockets`](https://www.php.net/manual/en/book.sockets.php) (low-level socket interface)
@@ -127,6 +127,37 @@ On macOS and Windows, Docker Desktop maps file ownership automatically, so UID d
 Mount a named volume to `/composer/cache` to keep the cache between container runs, as in the example above.
 A bind mount of a host directory works too, but make sure the directory exists before the container starts:
 otherwise Docker creates it owned by `root`, and Composer won't be able to write to it.
+
+## Xdebug
+
+Xdebug is installed, but disabled by default (`xdebug.mode=off`), so it doesn't slow PHP down.
+Enable it for a single run with the `XDEBUG_MODE` environment variable:
+
+```shell
+# Code coverage
+docker compose run --rm -e XDEBUG_MODE=coverage app vendor/bin/phpunit --coverage-html=var/coverage
+
+# Step debugging of a CLI script
+docker compose run --rm -e XDEBUG_MODE=debug -e XDEBUG_TRIGGER=1 app php script.php
+```
+
+### Step debugging in PhpStorm
+
+Add to the service from [Usage](#usage):
+
+```yaml
+# compose.yaml
+services:
+  app:
+    environment:
+      # Must match the server name in PhpStorm (Settings → PHP → Servers) with path mappings for /app
+      PHP_IDE_CONFIG: serverName=app
+    extra_hosts:
+      # Required on Linux only: Docker Desktop resolves host.docker.internal on its own
+      - host.docker.internal:host-gateway
+```
+
+Xdebug connects to `host.docker.internal:9003`. If the IDE doesn't receive a connection, check `/xdebug.log` in the container.
 
 ## License
 
