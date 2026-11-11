@@ -1,0 +1,3 @@
+ignored:
+  # The image is rebuilt weekly to pick up the latest Alpine packages, pinning versions would defeat that
+  - DL3018

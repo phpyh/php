@@ -19,8 +19,28 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Lint Dockerfile with Hadolint
+        uses: hadolint/hadolint-action@v3.5.0
+
+      - name: Check Dockerfile with BuildKit
+        run: docker buildx build --check .
+
+      - name: Lint workflows with actionlint
+        uses: docker://rhysd/actionlint:1.7.12
+        with:
+          args: -color
+
   build:
     name: Build ${{ matrix.php }} ${{ matrix.arch }}
+    needs: lint
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 30
     strategy:
@@ -149,9 +169,9 @@ jobs:
 
   publish:
     name: Publish ${{ matrix.php }}
-    needs: build
+    needs: [lint, build]
     # Same as env.PUSH (env is not available here); runs even if another PHP version failed to build
-    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && github.repository_owner == 'phpyh' }}
+    if: ${{ !cancelled() && needs.lint.result == 'success' && github.ref == 'refs/heads/main' && github.repository_owner == 'phpyh' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     strategy:
