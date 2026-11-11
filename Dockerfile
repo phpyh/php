@@ -1,10 +1,8 @@
+# syntax=docker/dockerfile:1
+
 ARG PHP_VERSION=8.5
 
 FROM php:${PHP_VERSION}-cli-alpine
-
-ARG UID=10001
-ARG GID=10001
-ARG XDEBUG=
 
 ENV LC_ALL=C.UTF-8
 
@@ -18,6 +16,8 @@ RUN <<EOF
         git \
         unzip
 EOF
+
+ARG XDEBUG
 
 RUN <<EOF
     set -eux
@@ -35,6 +35,9 @@ RUN <<EOF
         ${XDEBUG:-xdebug}
     ln -s /usr/local/bin/composer /usr/local/bin/c
 EOF
+
+ARG UID=10001
+ARG GID=10001
 
 RUN <<EOF
     set -eux
