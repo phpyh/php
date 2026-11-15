@@ -1,4 +1,4 @@
-# CLAUDE.md
+# AGENTS.md
 
 Every push to `main` publishes the images to the moving tags `ghcr.io/phpyh/php:<version>`: a merged change
 reaches users without a release step, so treat every change of the image as user-facing.
