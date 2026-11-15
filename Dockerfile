@@ -28,8 +28,8 @@ RUN <<EOF
     # opcache is enabled in all base images, mbstring is missing from 8.6.
     # The installer builds sockets first, compiles event with sockets support
     # and names its ini xx-php-ext-event.ini, so event is loaded after sockets.
-    # TODO: install ev from PECL again after 2026-11-23. Its CDN still serves the withdrawn 1.3.0
-    # or the outdated 1.2.3 as stable to CI runners, so ev is installed from GitHub.
+    # TODO: install ev from PECL again, the PHP versions workflow fails when PECL serves 1.3.1+ to CI runners.
+    # Until then its CDN serves the withdrawn 1.3.0 or the outdated 1.2.3 as stable, so ev is installed from GitHub.
     install-php-extensions \
         @composer \
         mbstring \
