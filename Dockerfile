@@ -25,7 +25,9 @@ ARG XDEBUG
 
 RUN <<EOF
     set -eux
-    # opcache is enabled in all base images, mbstring is missing from 8.6
+    # opcache is enabled in all base images, mbstring is missing from 8.6.
+    # The installer builds sockets first, compiles event with sockets support
+    # and names its ini xx-php-ext-event.ini, so event is loaded after sockets.
     install-php-extensions \
         @composer \
         mbstring \
@@ -36,6 +38,8 @@ RUN <<EOF
         bcmath \
         pgsql \
         pdo_pgsql \
+        ev \
+        event \
         ${XDEBUG:-xdebug}
     ln -s /usr/local/bin/composer /usr/local/bin/c
 EOF

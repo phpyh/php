@@ -75,6 +75,8 @@ To bind-mount a host directory instead, create it first, otherwise Docker create
 - Git trusts all directories (`safe.directory=*`), so it works in mounted repositories owned by another user
 - PHP extensions:
   [`bcmath`](https://www.php.net/manual/en/book.bc.php),
+  [`ev`](https://www.php.net/manual/en/book.ev.php),
+  [`event`](https://www.php.net/manual/en/book.event.php) (with `sockets` support),
   [`intl`](https://www.php.net/manual/en/book.intl.php),
   [`mbstring`](https://www.php.net/manual/en/book.mbstring.php),
   [`opcache`](https://www.php.net/manual/en/book.opcache.php),

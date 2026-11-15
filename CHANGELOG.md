@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Image tags are moving, so changes are listed by the date (UTC) they were published.
 Check when your local image was built with `docker image inspect --format '{{.Created}}' ghcr.io/phpyh/php:8.5`.
 
+## 2026-11-16
+
+### Added
+
+- Add `ev` and `event` extensions. `event` is built with `sockets` support.
+
 ## 2026-11-11
 
 ### Added
