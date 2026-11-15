@@ -1,5 +1,4 @@
-# Reminds to update the build matrix when a PHP version is released, reaches end of life or leaves RC,
-# and to install ev from PECL again once PECL serves its current release
+# Reminds to update the build matrix when a PHP version is released, reaches end of life or leaves RC
 name: PHP versions
 
 on:
@@ -9,7 +8,6 @@ on:
     paths: &paths
       - .github/workflows/build.yaml
       - .github/workflows/php-versions.yaml
-      - Dockerfile
   pull_request:
     paths: *paths
   schedule:
@@ -42,16 +40,5 @@ jobs:
           ' <<< "$php")
           if [ -n "$errors" ]; then
             echo "$errors"
-            exit 1
-          fi
-
-      # See the TODO in Dockerfile. Uses the same URL as install-php-extensions.
-      - name: Check that ev can be installed from PECL again
-        if: ${{ !cancelled() }}
-        run: |
-          grep -q 'rosmanov/pecl-ev@' Dockerfile || exit 0
-          stable=$(curl -fsS http://pecl.php.net/rest/r/ev/stable.txt)
-          if [ "$(printf '%s\n' 1.3.1 "$stable" | sort -V | head -n1)" = 1.3.1 ]; then
-            echo "::error::PECL serves ev $stable as stable, install ev from PECL again in Dockerfile and remove this step"
             exit 1
           fi
