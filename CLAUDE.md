@@ -3,7 +3,7 @@
 Every push to `main` publishes the images to the moving tags `ghcr.io/phpyh/php:<version>`: a merged change
 reaches users without a release step, so treat every change of the image as user-facing.
 
-Commit and push straight to `main`, without branches or pull requests: CI on the push is the verification.
+Commit and push straight to `main`, without branches or pull requests.
 
 ## Verify a change
 
