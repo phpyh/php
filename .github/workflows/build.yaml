@@ -83,10 +83,8 @@ jobs:
             XDEBUG=${{ matrix.xdebug }}
           tags: phpyh-php:test
           load: true
-          # Weekly rebuild without GHA cache picks up new releases of extensions and tools.
-          # The push step below reuses the layers from the local builder cache anyway.
-          cache-from: ${{ github.event_name != 'schedule' && format('type=gha,scope=php-{0}-{1}', matrix.php, matrix.arch) || '' }}
-          cache-to: type=gha,scope=php-${{ matrix.php }}-${{ matrix.arch }},mode=max
+          # No GHA cache: every build picks up new releases of extensions and tools, and the smoke test checks them.
+          # The push step below reuses the layers from the local builder cache.
 
       - name: Smoke test
         run: tests/smoke.sh phpyh-php:test
