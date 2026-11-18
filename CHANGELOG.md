@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Image tags are moving, so changes are listed by the date (UTC) they were published.
 Check when your local image was built with `docker image inspect --format '{{.Created}}' ghcr.io/phpyh/php:8.5`.
 
+## 2026-11-18
+
+### Added
+
+- Tag release candidates with the RC number, e.g. `ghcr.io/phpyh/php:8.6-rc7`, to pin a specific RC.
+
 ## 2026-11-16
 
 ### Added

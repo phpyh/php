@@ -18,7 +18,8 @@ so PHP patch releases, extensions and tools stay up to date.
 | `ghcr.io/phpyh/php:8.6` | 8.6 (RC until GA release)                          |
 
 Each image is also tagged with the full PHP version, e.g. `ghcr.io/phpyh/php:8.5.12`.
-Both tags are moving: they are rebuilt weekly with the latest extensions and tools.
+Release candidates are also tagged with the RC number, e.g. `ghcr.io/phpyh/php:8.6-rc7`.
+All tags are moving: they are rebuilt weekly with the latest extensions and tools.
 For a reproducible environment, pin the image by digest:
 
 ```yaml

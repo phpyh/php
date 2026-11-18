@@ -173,7 +173,12 @@ jobs:
           # Both platforms must be built, otherwise the previously published image stays as is
           test "${#builds[@]}" -eq 2
           test "$(sort -u ./*/version | wc -l)" -eq 1
-          echo "version=$(cat ./build-*-amd64/version)" >> "$GITHUB_OUTPUT"
+          version=$(cat ./build-*-amd64/version)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          # Pinnable tag of a release candidate, e.g. 8.6.0RC7 → 8.6-rc7
+          if [[ $version =~ ^([0-9]+\.[0-9]+)\.0RC([0-9]+)$ ]]; then
+            echo "rc=${BASH_REMATCH[1]}-rc${BASH_REMATCH[2]}" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Extract image metadata
         id: meta
@@ -186,6 +191,7 @@ jobs:
           tags: |
             type=raw,value=${{ matrix.php }}
             type=raw,value=${{ steps.php.outputs.version }}
+            type=raw,value=${{ steps.php.outputs.rc }},enable=${{ steps.php.outputs.rc != '' }}
           annotations: *meta
 
       - name: Login to GitHub container registry
