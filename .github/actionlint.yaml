@@ -1,0 +1,5 @@
+paths:
+  .github/workflows/build.yaml:
+    ignore:
+      # Optional matrix keys, set in include only when needed: base for an RC (e.g. base: 8.7-rc), xdebug for a pre-release
+      - 'property "(base|xdebug)" is not defined in object type'
