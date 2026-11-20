@@ -15,7 +15,7 @@ so PHP patch releases, extensions and tools stay up to date.
 | `ghcr.io/phpyh/php:8.3` | 8.3                                                |
 | `ghcr.io/phpyh/php:8.4` | 8.4                                                |
 | `ghcr.io/phpyh/php:8.5` | 8.5                                                |
-| `ghcr.io/phpyh/php:8.6` | 8.6 (RC until GA release)                          |
+| `ghcr.io/phpyh/php:8.6` | 8.6                                                |
 
 Each image is also tagged with the full PHP version, e.g. `ghcr.io/phpyh/php:8.5.12`.
 Release candidates are also tagged with the RC number, e.g. `ghcr.io/phpyh/php:8.6-rc7`.
