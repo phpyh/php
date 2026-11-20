@@ -10,7 +10,7 @@ docker run --rm -i "$image" sh -eux <<'SH'
     # Extensions load without startup warnings, e.g. event loaded before sockets
     test -z "$(php -r '' 2>&1)"
     php -r '
-        foreach (["Zend OPcache", "xdebug", "mbstring", "uv", "pcntl", "sockets", "intl", "bcmath", "pgsql", "pdo_pgsql", "ev", "event"] as $ext) {
+        foreach (["Zend OPcache", "xdebug", "mbstring", "uv", "pcntl", "sockets", "intl", "bcmath", "pgsql", "pdo_pgsql", "event"] as $ext) {
             extension_loaded($ext) || throw new Error("Extension {$ext} is not loaded");
         }
         method_exists("EventUtil", "getSocketFd") || throw new Error("Event is built without sockets support");

@@ -12,6 +12,10 @@ Check when your local image was built with `docker image inspect --format '{{.Cr
 
 - Build `8.6` from the PHP 8.6.0 GA release instead of release candidates. Like the official `php:8.6` images, it is built with thread safety (ZTS), unlike 8.2–8.5. Xdebug stays at 3.6.0alpha1 until 3.6 is stable. The last release candidate stays available as `ghcr.io/phpyh/php:8.6-rc7`.
 
+### Removed
+
+- **BC Break:** Remove the `ev` extension. If you need it, install it in your own image: `USER root`, `RUN install-php-extensions ev`, `USER 1000:1000` on top of `FROM ghcr.io/phpyh/php:<version>`.
+
 ## 2026-11-18
 
 ### Added
